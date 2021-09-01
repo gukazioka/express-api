@@ -1,4 +1,5 @@
 import express from "express"
+import DatabaseInit from "./database/databaseInit.js"
 
 const port = 3000
 const app = express()
@@ -12,4 +13,5 @@ app.get('/', (req, res) =>{
 
 app.listen(port, ()=>{
     console.log('Servidor belezinha')
+    DatabaseInit.createTables()
 })
