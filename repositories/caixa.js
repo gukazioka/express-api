@@ -1,33 +1,82 @@
-import query from "../database/query.js"
+import db from "../database/config.js"
 
 export default class Caixa{
     static addCliente(usuario){
-        const sql = 'INSERT INTO CAIXA SET ?'
-        return query(sql, usuario)
+        return new Promise((resolve, reject) => {
+            const sql = 'INSERT INTO CAIXA(nome, password, saldo) values (?,?,?);'
+            const params = [
+                usuario.nome,
+                usuario.password,
+                usuario.saldo
+            ]
+            db.run(sql, params, (err) => {
+                if (err) {
+                    reject(err);
+                }
+                let response = (`ID Adicionado: ${this.lastID}`);
+                console.log(response)
+                resolve(response);
+            });
+        })
     }
 
     static removeCliente(usuarioID){
-        const sql = `DELETE FROM CAIXA WHERE id = ?`
-        return query(sql, usuarioID)
+        return new Promise((resolve, reject) => {
+            const sql = `DELETE FROM CAIXA WHERE id = ?`
+            db.run(sql, usuarioID, (err) => {
+                if(err)
+                    reject(err)
+                else
+                    resolve({"message": `Usuário do id ${usuarioID} deletado.`})
+            })
+        })
     }
 
     static getCliente(){
-        const sql = 'SELECT * FROM CAIXA'
-        return query(sql)
+        return new Promise((resolve, reject) => {
+            const sql = 'SELECT id, nome, password, saldo FROM caixa;'
+            db.all(sql, [], (err, rows) => {
+                if(err){
+                    reject(err)
+                }
+                resolve(rows);
+            });
+        });
     }
 
     static getClientePorID(usuarioID){
-        const sql = 'SELECT * FROM CAIXA WHERE id = ?'
-        return query(sql, usuarioID)
+        return new Promise((resolve, reject) => {
+            const sql = 'SELECT * FROM CAIXA WHERE id = ?'
+            db.all(sql, usuarioID, (err, rows) => {
+                if(err){
+                    reject(err)
+                }
+                resolve(rows);
+            });
+        });
     }
 
     static depositarDinheiro(valorDepositado, usuarioID){
-        const sql = `UPDATE CAIXA SET saldo = (saldo + ?) where id = ?`
-        return query(sql, [valorDepositado, usuarioID])
+        return new Promise((resolve, reject) => {
+            const sql = `UPDATE CAIXA SET saldo = (saldo + ?) where id = ?`
+            db.run(sql, [valorDepositado, usuarioID], (err) => {
+                if(err)
+                    reject(err)
+                else
+                    resolve({"message": `Depositado R$${valorDepositado} para o id ${usuarioID} .`})
+            })
+        })
     }
 
     static sacarDinheiro(valorSacado, usuarioID){
-        const sql = `UPDATE CAIXA SET saldo = (saldo - ?) where id = ?`
-        return query(sql, [valorSacado, usuarioID])
+        return new Promise((resolve, reject) => {
+            const sql = `UPDATE CAIXA SET saldo = (saldo - ?) where id = ?`
+            db.run(sql, [valorSacado, usuarioID], (err) => {
+                if(err)
+                    reject(err)
+                else
+                    resolve({"message": `Sacado R$${valorSacado} do id ${usuarioID} .`})
+            })
+        })
     }
 }

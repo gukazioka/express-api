@@ -24,9 +24,9 @@ export default class CaixaModel {
 
     static async saqueDinheiro(id, valor) {
         const conta = await caixaQuery.getClientePorID(id);
-        let saldo = parseInt(conta[0].saldo)
+        let saldo = parseFloat(conta[0].saldo)
         valor = parseFloat(valor)
-        if (valor > conta[0].saldo) {
+        if (valor > saldo) {
             return new Promise((resolve, reject) => {
                 reject('Transação não autorizada')
             })
@@ -34,12 +34,11 @@ export default class CaixaModel {
 
         return caixaQuery.sacarDinheiro(valor, id)
             .then(results => {
-                if (results.affectedRows > 0) {
-                    const response = `R$${valor} sacados da conta ${id}`
-                    return ({ response })
+                if (results != null) {
+                    return ({ results })
                 }
                 else {
-                    const response = `Conta não existe, valor não foi`
+                    const response = [{"message": "Conta inexistente ou saldo insuficiente."}]
                     return ({ response })
                 }
             })
@@ -53,9 +52,8 @@ export default class CaixaModel {
         }
         return caixaQuery.depositarDinheiro(valor, id)
             .then(results => {
-                if (results.affectedRows > 0) {
-                    const response = `R$${valor} depositados na conta ${id}`
-                    return ({ response })
+                if (results != null) {
+                    return ({ results })
                 }
                 else {
                     const response = `Conta não existe, valor não depositado`
