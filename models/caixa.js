@@ -62,15 +62,15 @@ export default class CaixaModel {
     static async logarCliente(cliente){
         console.log(cliente)
         const conta = await caixaQuery.getClientePorCPF(cliente.cpf)
-        if(conta[0].password == cliente.password){
+        if(conta.length != 0 && conta[0].password == cliente.password){
             return new Promise((resolve, reject) => {
-                const response = [{"message": "Usuário logado com sucesso."}]
+                const response = {"message": "Usuário logado com sucesso.", id:conta[0].id}
                 resolve(response)
             })
         }
         else{
             return new Promise((resolve, reject) => {
-                const response = [{"message": "CPF ou senha incorreta"}]
+                const response = {"message": "CPF ou senha incorreta"}
                 reject(response)
             })
         }
