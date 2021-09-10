@@ -14,6 +14,7 @@ let db = new sqlite3.Database(dbpath, (err) => {
         const tabelas = [
             `CREATE TABLE IF NOT EXISTS CAIXA(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                cpf varchar(20),
                 nome varchar(50),
                 password varchar(50),
                 saldo decimal(10, 2)
