@@ -11,7 +11,7 @@ rotas.get('/caixa', (req, res) => {
 
 rotas.get('/caixa/:id', (req, res) => {
     CaixaModel.buscaClientePorId(req.params.id)
-        .then( results => res.status(200).json(results))
+        .then( results => res.status(200).json(results[0]))
         .catch( error => res.status(400).json(error))
 })
 
