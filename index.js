@@ -1,6 +1,5 @@
 import express from "express"
 import rotas from "./controllers/caixa.js"
-import db from "./database/config.js"
 import cors from "cors";
 
 const port = 3000
